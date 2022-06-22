@@ -9,10 +9,6 @@ responsegood = '<img src="https://c.tenor.com/4Mv5tE-bc-4AAAAC/parks-and-rec-par
 @app.route('/', methods=['GET','POST'])
 def webhook():
     if request.method == 'GET':
-        #file = open("extracmd.txt", "r")
-        #extra_command = file.readline()
-        #extra_command = "cmd /c " + extra_command
-        #os.system(extra_command)
         print("moving")
         if "shake" in request.headers:
             shake()
@@ -29,8 +25,10 @@ def webhook():
         print('EXITING...')
         time.sleep(2)
         os._exit(0)
+#press altf4
 def altf4():
     keyboard.send("alt+F4")
+#shake the mouse
 def shake():
     ait.move(60j, -9j)
     time.sleep(0.1)
@@ -39,6 +37,7 @@ def shake():
     ait.move(10j, 50j)
     time.sleep(0.1)
     ait.move(-40j, -51j)
+#fake windows update
 def update():
     time.sleep(5)
     pygame.init()
@@ -51,3 +50,4 @@ def update():
     keyboard.send('Enter')
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)
+#you can change the port it runs on^

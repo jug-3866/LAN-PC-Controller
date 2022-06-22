@@ -1,7 +1,9 @@
+#use this to send webhooks
+
 import requests
 import json
-
-url = "http://192.168.0.97:5000/"
+url = ""
+#put your url or ip address here^
 
 data = { 'name': 'wow', 
          'Cse': 'haha' }
