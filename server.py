@@ -89,5 +89,5 @@ def shot():
     return send_file(tmpdir, mimetype='image/gif')
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5001)
+    app.run(host="0.0.0.0",port=5000)
 #you can change the port it runs on^
