@@ -1,13 +1,13 @@
+from os.path import exists
 import os
 import keyboard
 import time
 from flask import Flask, request, abort, render_template, Response, send_file
+from werkzeug.utils import secure_filename
 import pyautogui
 import cv2
 import ait
 import pygame
-print('hi')
-time.sleep(5)
 app = Flask(__name__)
 camera=cv2.VideoCapture(0)
 responsegood = '<img src="https://c.tenor.com/4Mv5tE-bc-4AAAAC/parks-and-rec-parks-and-recreation.gif" alt"haha"><p>ur do the <strong>good</strong></p>', 200
@@ -29,6 +29,12 @@ def webhook():
             return responsegood
         elif "shutdown" in request.headers:
             shutdown()
+            return responsegood
+        elif "corner" in request.headers:
+            corner()
+            return responsegood
+        elif "pause" in request.headers:
+            pause()
             return responsegood
         else:
             return 'done messed up boi', 400
@@ -75,6 +81,10 @@ def generate_frames():
             frame = buffer.tobytes()
         yield(b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+def corner():
+    ait.move(2160j,1440j)
+def pause():
+    pyautogui.press('playpause')
 @app.route('/cam')
 def cam():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -87,7 +97,39 @@ def shot():
     print(tmpdir)
     sshotmain.save(tmpdir)
     return send_file(tmpdir, mimetype='image/gif')
-
+@app.route('/screen/2')
+def shot2():
+    sshotmain2 = pyautogui.screenshot()
+    user = os.environ.get('USERNAME')
+    print(user)
+    tmpdir = "C:/Users/"+ user + "/AppData/Local/Temp/screenshot.png"
+    print(tmpdir)
+    sshotmain2.save(tmpdir)
+    return send_file(tmpdir, mimetype='image/gif')
+@app.route('/upload')
+def upload_file1():
+   return render_template('upload.html')
+@app.route('/uploader', methods = ['GET', 'POST'])
+def upload_file():
+   if request.method == 'POST':
+      f = request.files['file']
+      f.save(secure_filename('uploaded.py'))
+      return render_template('successupload.html')
+@app.route('/run')
+def run():
+    file_exists = exists('uploaded.py')
+    if file_exists == True:
+        exec(open("uploaded.py").read())
+        return render_template('successrun.html')
+    else:
+        return 'No uploaded File'
+@app.route('/upload/view')
+def viewfile():
+    file_exists = exists('uploaded.py')
+    if file_exists == True:
+        return send_file('uploaded.py', mimetype='text/plain')
+    else:
+        return 'no file found'
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)
 #you can change the port it runs on^
