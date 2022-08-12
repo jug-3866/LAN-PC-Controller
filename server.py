@@ -117,5 +117,5 @@ def viewfile():
         return 'no file found'
 os.startfile("reopen.exe")
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5000)
+    app.run(host="0.0.0.0",port=80)
 #you can change the port it runs on^
