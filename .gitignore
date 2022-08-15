@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 server.spec
 server.py
+server.spec
+uploaded.py
+server.spec
